@@ -9,8 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <div>
-      <Navigation />
       <BrowserRouter>
+      <Navigation />
         <Routes>
           <Route exact path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
