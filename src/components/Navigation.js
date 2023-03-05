@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { eraseCookie, getCookie } from '../cookies';
 
 export default function Navigation() {
@@ -11,9 +11,11 @@ export default function Navigation() {
         setToken(getCookie('auth-token'));
     }, [location])
 
+    const navigate = useNavigate();
     function performLogout() {
         eraseCookie('auth-token');
         setToken(getCookie('auth-token'));
+        navigate('/');
     }
 
     if (token) {
@@ -24,6 +26,7 @@ export default function Navigation() {
                     <Navbar.Collapse>
                         <Nav className="me-auto">
                             <div className="nav-link"><NavLink to="/">Home</NavLink></div>
+                            <div className="nav-link"><NavLink to="/profile-info">Profile Info</NavLink></div>
                             <div className="nav-link" onClick={performLogout}>Logout</div>
                         </Nav>
                     </Navbar.Collapse>
