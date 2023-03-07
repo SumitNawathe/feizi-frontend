@@ -6,6 +6,7 @@ import Homepage from './pages/Homepage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProfileInfo from './pages/ProfileInfo';
+import Segmentation from './pages/Segmentation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile-info" element={<ProfileInfo />} />
+          <Route path="/segmentation/:filename" element={<Segmentation />} />
         </Routes>
       </BrowserRouter>
     </div>

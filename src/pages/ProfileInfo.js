@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate, Link } from 'react-router-dom';
 import { eraseCookie, getCookie } from '../cookies';
 
 export default function ProfileInfo() {
@@ -93,7 +93,7 @@ export default function ProfileInfo() {
             <h4>Uploaded Images:</h4>
             {
                 (filenames.length == 0) ? <p>No uploaded files to show</p> :
-                <ul>{filenames.map((filename, index) => <li key={index}>{filename}</li>)}</ul>
+                <ul>{filenames.map((filename, index) => <li key={index}><Link to={'/segmentation/'+filename}>{filename}</Link></li>)}</ul>
             }
 
             <h4>Upload a file here:</h4>
