@@ -8,10 +8,12 @@ import Signup from './pages/Signup';
 import ProfileInfo from './pages/ProfileInfo';
 import Segmentation from './pages/Segmentation';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { OpenCvProvider } from 'opencv-react';
 
 function App() {
   return (
     <div>
+      <OpenCvProvider>
       <BrowserRouter>
       <Navigation />
         <Routes>
@@ -22,6 +24,7 @@ function App() {
           <Route path="/segmentation/:filename" element={<Segmentation />} />
         </Routes>
       </BrowserRouter>
+      </OpenCvProvider>
     </div>
   );
 }
