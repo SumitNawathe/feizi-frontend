@@ -63,7 +63,11 @@ export default function ProfileInfo() {
         let formData = new FormData(uploadForm);
         const file = document.getElementById('file-upload').files[0];
         formData.append('file', file);
-        fetch('http://localhost:8000/images/upload', {
+        const label = document.getElementById('image-label').value;
+        console.log('label: ', label);
+        if (label.length === 0)
+            return;
+        fetch('http://localhost:8000/images/upload/' + label, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -98,8 +102,9 @@ export default function ProfileInfo() {
 
             <h4>Upload a file here:</h4>
             <form id="upload-form">
-                <input type="file" id="file-upload" />
-                <button onClick={performFileUpload} type="button">Submit</button>
+                <p><input type="file" id="file-upload" /></p>
+                <p>Image label: <input type="text" id="image-label" /></p>
+                <p><button onClick={performFileUpload} type="button">Submit</button></p>
             </form>
             { imageError && <p class="text-warning">Error during upload.</p>}
         </div>

@@ -12,8 +12,8 @@ export default function Segmentation() {
 
     const [token, setToken] = useState(getCookie('auth-token'));
 
-    let image = null;
-    fetch('http://localhost:8000/images/' + filename, {
+    const [label, setLabel] = useState('');
+    fetch('http://localhost:8000/images/label/' + filename, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -22,10 +22,25 @@ export default function Segmentation() {
             'Authorization': token
         }
     }).then(resp => {
-        // console.log(resp);
+        return resp.json();
+    }).then(resp => {
+        setLabel(resp['label']);
+    }).catch(e => {
+        console.log(e);
+    })
+
+    let image = null;
+    fetch('http://localhost:8000/images/file/' + filename, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Authorization': token
+        }
+    }).then(resp => {
         return resp.blob();
     }).then(resp => {
-        // console.log(resp);
         image = new Image();
         image.src = URL.createObjectURL(resp);
         image.onload = () => {
@@ -48,7 +63,6 @@ export default function Segmentation() {
     }, [cv]);
 
     function runCanvas() {
-        // console.log('runCanvas');
         drawCanvas();
         document.getElementById('canvasOutput').addEventListener('click', mouseCallback)
     }
@@ -64,7 +78,6 @@ export default function Segmentation() {
     }
 
     function drawCanvas() {
-        // let img = document.createElement('img');
         let mat = cv.imread(image);
 
         for (let i = 0; i < points.length - 1; i += 1) {
@@ -86,8 +99,9 @@ export default function Segmentation() {
             <h2>Manual Image Segmentation</h2>
             <p>Image:</p>
             <canvas id="canvasOutput"></canvas>
-            <p></p>
+            <p>Click to plot points. Create a contour around the main object with label: { label }</p>
             <button onClick={() => {points = []; drawCanvas();}}>Clear Points</button>
+            <button>Submit</button>
         </div>
     );
 };
