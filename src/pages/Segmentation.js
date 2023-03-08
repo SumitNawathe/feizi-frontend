@@ -22,11 +22,16 @@ export default function Segmentation() {
             'Authorization': token
         }
     }).then(resp => {
-        console.log(resp);
+        // console.log(resp);
         return resp.blob();
     }).then(resp => {
-        console.log(resp);
-        image = resp;
+        // console.log(resp);
+        image = new Image();
+        image.src = URL.createObjectURL(resp);
+        image.onload = () => {
+            image.width = 200 * (image.width / image.height);
+            image.height = 200;
+        }
     }).catch(resp => {
         console.log(resp);
     });
@@ -43,10 +48,8 @@ export default function Segmentation() {
     }, [cv]);
 
     function runCanvas() {
-        console.log('runCanvas');
-        let imgElement = document.getElementById('myimg');
-        imgElement.onload = drawCanvas;
-        imgElement.src = URL.createObjectURL(image);
+        // console.log('runCanvas');
+        drawCanvas();
         document.getElementById('canvasOutput').addEventListener('click', mouseCallback)
     }
 
@@ -61,10 +64,8 @@ export default function Segmentation() {
     }
 
     function drawCanvas() {
-        
-        let imgElement = document.getElementById('myimg');
-        console.log('drawCanvas cv: ', cv);
-        let mat = cv.imread(imgElement);
+        // let img = document.createElement('img');
+        let mat = cv.imread(image);
 
         for (let i = 0; i < points.length - 1; i += 1) {
             const p0 = new cv.Point(points[i][0], points[i][1])
@@ -80,73 +81,13 @@ export default function Segmentation() {
         mat.delete();
     }
 
-    // (async () => {
-    //     while (true) {
-    //         console.log(cv);
-    //         await new Promise(r => setTimeout(r, 1000));
-    //     }
-    // })();
-
-    // let componentLoaded = false;
-    // useEffect(() => {
-    //     if (componentLoaded) return;
-    //     componentLoaded = true;
-
-    //     console.log('loaded');
-    //     cv.imread(null);
-    //     console.log('hi');
-    // })
-
-    // const location = useLocation();
-    // useEffect(() => {
-    //     setToken(getCookie('auth-token'));
-    //     if (token) {
-    //         fetch('http://localhost:8000/images/' + filename, {
-    //             method: 'GET',
-    //             mode: 'cors',
-    //             headers: {
-    //                 'Access-Control-Allow-Origin': '*',
-    //                 'Access-Control-Allow-Headers': '*',
-    //                 'Authorization': token
-    //             }
-    //         }).then(resp => {
-    //             if (!resp.ok)
-    //                 throw new Error();
-    //             return resp.json();
-    //         }).then(resp => {
-    //             setUsername(resp['username']);
-    //             setEmail(resp['email']);
-    //             return fetch('http://localhost:8000/images/all_filenames', {
-    //                 method: 'GET',
-    //                 mode: 'cors',
-    //                 headers: {
-    //                     'Access-Control-Allow-Origin': '*',
-    //                     'Access-Control-Allow-Headers': '*',
-    //                     'content-type': 'application/json',
-    //                     'Authorization': token
-    //                 }
-    //             });
-    //         }).then(resp => {
-    //             if (!resp.ok)
-    //                 throw new Error();
-    //             return resp.json();
-    //         }).then(resp => {
-    //             setFilenames(resp);
-    //         }).catch(e => {
-    //             console.log(e);
-    //         })
-    //     } else {
-    //         navigate('/');
-    //     }
-    // }, [location]);
-
     return (
         <div>
             <h2>Manual Image Segmentation</h2>
-            <p>Original Image:</p>
-            <img id="myimg" style={{height: 200, hidden: true}} alt="Image Tag"/>
-            <p>Canvas:</p>
+            <p>Image:</p>
             <canvas id="canvasOutput"></canvas>
+            <p></p>
+            <button onClick={() => {points = []; drawCanvas();}}>Clear Points</button>
         </div>
     );
 };
