@@ -44,8 +44,8 @@ export default function Segmentation() {
         image = new Image();
         image.src = URL.createObjectURL(resp);
         image.onload = () => {
-            image.width = 200 * (image.width / image.height);
-            image.height = 200;
+            image.width = 300 * (image.width / image.height);
+            image.height = 300;
         }
     }).catch(resp => {
         console.log(resp);
@@ -83,15 +83,36 @@ export default function Segmentation() {
         for (let i = 0; i < points.length - 1; i += 1) {
             const p0 = new cv.Point(points[i][0], points[i][1])
             const p1 = new cv.Point(points[i+1][0], points[i+1][1])
-            cv.line(mat, p0, p1, [130, 0, 0, 255], 2);
+            cv.line(mat, p0, p1, [130, 0, 0, 255], 1);
         }
 
         for(const p of points) {
-            cv.circle(mat, new cv.Point(p[0], p[1]), 5, [255, 0, 0, 255], -1);
+            cv.circle(mat, new cv.Point(p[0], p[1]), 2, [255, 0, 0, 255], -1);
         }
 
         cv.imshow('canvasOutput', mat);
         mat.delete();
+    }
+
+    function submit() {
+        console.log('submitting');
+        console.log(points);
+        console.log(JSON.stringify(points));
+        fetch('http://localhost:8000/images/segmentation/' + filename, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+                'content-type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(points)
+        }).then(resp => {
+            console.log(resp)
+        }).catch(e => {
+            console.log(e);
+        })
     }
 
     return (
@@ -101,7 +122,7 @@ export default function Segmentation() {
             <canvas id="canvasOutput"></canvas>
             <p>Click to plot points. Create a contour around the main object with label: { label }</p>
             <button onClick={() => {points = []; drawCanvas();}}>Clear Points</button>
-            <button>Submit</button>
+            <button onClick={submit}>Submit</button>
         </div>
     );
 };
