@@ -50,7 +50,7 @@ export default function Login() {
 
     return (
         <div>
-            <h2>Login</h2>
+            <h2 style={{paddingTop: '20px'}}>Login</h2>
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Username:</Form.Label>

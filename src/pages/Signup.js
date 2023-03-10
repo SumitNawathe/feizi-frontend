@@ -42,7 +42,7 @@ export default function Signup() {
 
     return (
         <div>
-            <h2>Sign Up</h2>
+            <h2 style={{paddingTop: '20px'}}>Sign Up</h2>
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Username:</Form.Label>

@@ -88,23 +88,27 @@ export default function ProfileInfo() {
 
     return (
         <div>
-            <h2>Profile Info</h2>
+            <h2 style={{paddingTop: '20px'}}>Profile Info</h2>
             <ul>
                 <li>Username: { username }</li>
                 <li>Email: { email }</li>
             </ul>
 
-            <h4>Uploaded Images:</h4>
+            <h4 style={{paddingTop: '20px'}}>Uploaded Images:</h4>
+            <p>Here are all of the images you have uploaded using the form below.</p>
+            <p>Clicking on them will allow you to manually segment the image.</p>
             {
                 (filenames.length == 0) ? <p>No uploaded files to show</p> :
                 <ul>{filenames.map((filename, index) => <li key={index}><Link to={'/segmentation/'+filename}>{filename}</Link></li>)}</ul>
             }
 
-            <h4>Upload a file here:</h4>
+            <h4 style={{paddingTop: '20px'}}>Upload a file here:</h4>
+            <p>Please upload image files and accompanying labels for the primary object in view.</p>
+            <p>The image and label will be saved in our database under your profile, along with a distorted copy.</p>
             <form id="upload-form">
                 <p><input type="file" id="file-upload" /></p>
                 <p>Image label: <input type="text" id="image-label" /></p>
-                <p><button onClick={performFileUpload} type="button">Submit</button></p>
+                <p><button onClick={performFileUpload} type="button">Upload</button></p>
             </form>
             { imageError && <p class="text-warning">Error during upload.</p>}
         </div>

@@ -27,7 +27,9 @@ export default function Segmentation() {
         setLabel(resp['label']);
     }).catch(e => {
         console.log(e);
-    })
+    });
+
+    const [errorState, setErrorState] = useState(false);
 
     let image = null;
     fetch('http://localhost:8000/images/file/' + filename, {
@@ -51,33 +53,33 @@ export default function Segmentation() {
         console.log(resp);
     });
 
-    let pageLoaded = false;
+    const location = useLocation();
     useEffect(() => {
-        if (cv === null || pageLoaded) return;
-        pageLoaded = true;
+        console.log('useEffect');
         (async () => {
             while (image === null)
                 await new Promise(r => setTimeout(r, 1000));
             runCanvas();
         })();
-    }, [cv]);
+    }, [cv, location]);
 
     function runCanvas() {
+        clearPoints();
         drawCanvas();
         document.getElementById('canvasOutput').addEventListener('click', mouseCallback)
     }
-
-    let points = [];
     
     function mouseCallback(e) {
         let rect = document.getElementById('canvasOutput').getClientRects()[0];
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-        points.push([x, y]);
+        global.points = [...global.points, [x, y]];
         drawCanvas();
     }
 
     function drawCanvas() {
+        // global.points necessary because canvas loads late?
+        const points = global.points;
         let mat = cv.imread(image);
 
         for (let i = 0; i < points.length - 1; i += 1) {
@@ -95,9 +97,6 @@ export default function Segmentation() {
     }
 
     function submit() {
-        console.log('submitting');
-        console.log(points);
-        console.log(JSON.stringify(points));
         fetch('http://localhost:8000/images/segmentation/' + filename, {
             method: 'POST',
             mode: 'cors',
@@ -107,22 +106,28 @@ export default function Segmentation() {
                 'content-type': 'application/json',
                 'Authorization': token
             },
-            body: JSON.stringify(points)
+            body: JSON.stringify(global.points)
         }).then(resp => {
-            console.log(resp)
+            navigate('/profile-info');
         }).catch(e => {
-            console.log(e);
+            setErrorState(true);
         })
+    }
+
+    function clearPoints() {
+        global.points = [];
+        drawCanvas();
     }
 
     return (
         <div>
-            <h2>Manual Image Segmentation</h2>
+            <h2 style={{paddingTop: '20px'}}>Manual Image Segmentation</h2>
             <p>Image:</p>
             <canvas id="canvasOutput"></canvas>
             <p>Click to plot points. Create a contour around the main object with label: { label }</p>
-            <button onClick={() => {points = []; drawCanvas();}}>Clear Points</button>
+            <button onClick={clearPoints}>Clear Points</button>
             <button onClick={submit}>Submit</button>
+            {errorState && <p class="text-warning">Error during submission, please try again.</p>}
         </div>
     );
 };
