@@ -18,7 +18,7 @@ export default function Signup() {
         console.log('email: ', email);
         console.log('password: ', password);
 
-        fetch('http://localhost:8000/users/create', {
+        fetch('https://3.22.70.164:5000/users/create', {
             method: 'POST',
             mode: 'cors',
             headers: {

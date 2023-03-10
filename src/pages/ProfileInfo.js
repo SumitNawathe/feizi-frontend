@@ -18,7 +18,7 @@ export default function ProfileInfo() {
     useEffect(() => {
         setToken(getCookie('auth-token'));
         if (token) {
-            fetch('http://localhost:8000/users/info', {
+            fetch('https://3.22.70.164:5000/users/info', {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -34,7 +34,7 @@ export default function ProfileInfo() {
             }).then(resp => {
                 setUsername(resp['username']);
                 setEmail(resp['email']);
-                return fetch('http://localhost:8000/images/all_filenames', {
+                return fetch('https://3.22.70.164:5000/images/all_filenames', {
                     method: 'GET',
                     mode: 'cors',
                     headers: {
@@ -67,7 +67,7 @@ export default function ProfileInfo() {
         console.log('label: ', label);
         if (label.length === 0)
             return;
-        fetch('http://localhost:8000/images/upload/' + label, {
+        fetch('https://3.22.70.164:5000/images/upload/' + label, {
             method: 'POST',
             mode: 'cors',
             headers: {

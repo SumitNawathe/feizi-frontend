@@ -13,7 +13,7 @@ export default function Segmentation() {
     const [token, setToken] = useState(getCookie('auth-token'));
 
     const [label, setLabel] = useState('');
-    fetch('http://localhost:8000/images/label/' + filename, {
+    fetch('https://3.22.70.164:5000/images/label/' + filename, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -32,7 +32,7 @@ export default function Segmentation() {
     const [errorState, setErrorState] = useState(false);
 
     let image = null;
-    fetch('http://localhost:8000/images/file/' + filename, {
+    fetch('https://3.22.70.164:5000/images/file/' + filename, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -97,7 +97,7 @@ export default function Segmentation() {
     }
 
     function submit() {
-        fetch('http://localhost:8000/images/segmentation/' + filename, {
+        fetch('https://3.22.70.164:5000/images/segmentation/' + filename, {
             method: 'POST',
             mode: 'cors',
             headers: {

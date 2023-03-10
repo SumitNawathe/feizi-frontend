@@ -19,7 +19,7 @@ export default function Login() {
         console.log('username: ', username);
         console.log('password: ', password);
 
-        fetch('http://localhost:8000/login', {
+        fetch('https://3.22.70.164:5000/login', {
             method: 'POST',
             mode: 'cors',
             headers: {
